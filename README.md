@@ -107,7 +107,7 @@ Plain HTML, CSS and JavaScript with no libraries, no build step and nothing load
    git add .
    git commit -m "Soil–Forest Cause–Effect Map"
    git branch -M main
-   git remote add origin https://github.com/waleedsoil/soil-forest-cause-effect-map.git
+   git remote add origin https://github.com/amatulifa/soil-forest-cause-effect-map.git
    git push -u origin main
    ```
 3. On GitHub: **Settings → Pages → Build and deployment → Source: Deploy from a branch, Branch: main, / (root) → Save**.
@@ -120,8 +120,8 @@ If a red bar at the top of the page says that files did not load, a folder is mi
 - Code (`index.html`, `assets/`): [MIT](LICENSE).
 - Content (the boxes, arrows and texts in `data/network.js`): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Reuse it freely with credit.
 
-> Ramzan, W. (2026). Soil–Forest Cause–Effect Map: an interactive map of causes and effects in temperate forest soils. https://waleedsoil.github.io/soil-forest-cause-effect-map/
+> Ramzan, W. (2026). Soil–Forest Cause–Effect Map: an interactive map of causes and effects in temperate forest soils. https://amatulifa.github.io/soil-forest-cause-effect-map/
 
 ## Credits
 
-Created by Waleed Ramzan. It grew out of a group project in the Landscape Ecology Project Seminar 2026/27 at the University of Göttingen. The ring layout follows Mulder’s chart of nutrient interactions.
+Created by Waleed Ramzan (Design and Initial Idea) & Amatul Jameel (Review, Hosting and Management). It grew out of a group project in the Landscape Ecology Project Seminar 2026/27 at the University of Göttingen. The ring layout follows Mulder’s chart of nutrient interactions.
