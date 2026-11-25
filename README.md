@@ -2,7 +2,7 @@
 
 An interactive map of how climate, topography, trees, management and soil properties affect each other in temperate forests. Pick any factor and follow a change along every chain of arrows, find what drives it, trace the routes between two factors, or list the feedback loops. Every arrow has a short mechanism and published sources.
 
-**Open the map:** https://waleedsoil.github.io/soil-forest-cause-effect-map/ *(change this link if your repository has another name)*
+**Open the map:** https://amatulifa.github.io/soil-forest-cause-effect-map/ *(change this link if your repository has another name)*
 
 ![The map with the effects of more recalcitrant litter](docs/screenshot.jpg)
 
