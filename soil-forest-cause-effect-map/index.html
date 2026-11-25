@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Soil–Forest Cause–Effect Map</title>
+<meta name="description" content="An interactive map of how climate, topography, trees, management and soil properties affect each other in temperate forests. Follow any change along every chain of arrows, with a mechanism and sources for each arrow.">
+<script>try{if(localStorage.getItem("cem-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="assets/css/style.css?v=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%234a7d12' stroke-width='3'/%3E%3Ccircle cx='16' cy='4' r='3.5' fill='%231d64b0'/%3E%3Ccircle cx='26.4' cy='22' r='3.5' fill='%23bf2a6b'/%3E%3Ccircle cx='5.6' cy='22' r='3.5' fill='%23a8650a'/%3E%3C/svg%3E">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="var(--c-veg)" stroke-width="3"/><circle cx="16" cy="4" r="3.5" fill="var(--pos)"/><circle cx="26.4" cy="22" r="3.5" fill="var(--c-chem)"/><circle cx="5.6" cy="22" r="3.5" fill="var(--c-phys)"/></svg>
+    Soil–Forest Cause–Effect Map
+  </a>
+  <nav class="nav" aria-label="Sections">
+    <a href="#map">Map</a>
+    <a href="#arrows">All arrows</a>
+    <a href="#about">How to use</a>
+    <a href="#references">References</a>
+  </nav>
+  <button type="button" class="theme" id="themeBtn" role="switch" aria-checked="false"><span class="track"><span class="knob"></span></span>Dark mode</button>
+  <script>
+  (function(){var b=document.getElementById("themeBtn"),r=document.documentElement;
+   function s(){b.setAttribute("aria-checked",r.getAttribute("data-theme")==="dark"?"true":"false")}
+   b.addEventListener("click",function(){var d=r.getAttribute("data-theme")!=="dark";if(d)r.setAttribute("data-theme","dark");else r.removeAttribute("data-theme");
+    try{localStorage.setItem("cem-theme",d?"dark":"light")}catch(e){}s()});s()})();
+  </script>
+</div></header>
+
+<main>
+<section class="intro"><div class="wrap">
+  <h1>Soil–Forest Cause–Effect Map</h1>
+  <p class="lead">How climate, topography, trees, management and soil properties affect each other in temperate forests. Pick any box and follow a change along every chain of arrows, find what drives it, trace the routes between two boxes, or list the feedback loops. Each arrow has a mechanism and its sources.</p>
+  <div class="stats" id="stats"></div>
+</div></section>
+
+<section id="map"><div class="wrap">
+  <div class="tools">
+    <label class="field"><span>Box</span><select id="pick"></select></label>
+    <div class="field"><span>Show</span>
+      <div class="seg" id="mode" role="group" aria-label="What to show for the box">
+        <button type="button" data-m="effects">Effects</button><button type="button" data-m="causes">Causes</button><button type="button" data-m="direct">Direct arrows</button>
+      </div></div>
+    <div class="field"><span>If the box</span>
+      <div class="seg" id="dir" role="group" aria-label="Direction of the change">
+        <button type="button" data-d="1">increases</button><button type="button" data-d="-1">decreases</button>
+      </div></div>
+    <div class="field"><span>Trace all chains</span>
+      <div class="trace"><select id="tf" aria-label="From"></select><span aria-hidden="true">→</span><select id="tt" aria-label="To"></select><button type="button" class="btn" id="tgo">Trace</button></div></div>
+    <button type="button" class="btn" id="loopsBtn" aria-pressed="false">Feedback loops</button>
+    <label class="field"><span>Longest chain</span><select id="depth"></select></label>
+    <span class="sp"></span>
+    <div class="field"><span class="msg" id="msg" role="status"></span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" id="share">Copy link</button><button type="button" class="btn" id="svgBtn">Download SVG</button><button type="button" class="btn" id="reset">Reset</button></div></div>
+  </div>
+  <div class="chips" id="chips"><span>Categories (click to hide):</span></div>
+  <div class="mapgrid">
+    <div>
+      <p class="hint">Scroll the map sideways to see all of it.</p>
+      <div class="ringwrap" id="ringwrap"><svg class="ring" id="ring" role="group" aria-label="Ring of boxes connected by arrows"></svg></div>
+      <div class="legend" aria-hidden="true">
+        <span><svg viewBox="0 0 34 14"><line x1="2" y1="7" x2="32" y2="7" stroke="var(--pos)" stroke-width="2.5"/></svg>+ more gives more</span>
+        <span><svg viewBox="0 0 34 14"><line x1="2" y1="7" x2="32" y2="7" stroke="var(--neg)" stroke-width="2.5" stroke-dasharray="6 4"/></svg>− more gives less</span>
+        <span><svg viewBox="0 0 34 14"><line x1="2" y1="7" x2="32" y2="7" stroke="var(--dep)" stroke-width="2.2" stroke-dasharray="2 3"/></svg>± depends on conditions</span>
+        <span><svg viewBox="0 0 34 14"><circle cx="17" cy="7" r="6" fill="none" stroke="var(--pos)" stroke-width="2"/><text x="17" y="11" text-anchor="middle" font-size="10" font-weight="700" fill="var(--pos)">↑</text></svg>result of the change</span>
+      </div>
+    </div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+    <button type="button" class="btn pri jump" id="jump" hidden>See results ↓</button>
+  </div>
+</div></section>
+
+<section class="sec" id="arrows"><div class="wrap">
+  <h2>All arrows</h2>
+  <p class="lead" style="font-size:16px">Every arrow on the map with its mechanism and sources. Click a row to show it on the map.</p>
+  <label class="field" style="max-width:420px;margin-bottom:10px"><span>Filter</span><input type="search" id="afilter" placeholder="for example: pH, earthworm, nitrate"></label>
+  <div class="scroll"><table class="atab" id="atab">
+    <thead><tr><th>From</th><th>Sign</th><th>To</th><th>Mechanism</th><th>Sources</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <p class="more" id="acount"></p>
+</div></section>
+
+<section class="sec" id="about"><div class="wrap">
+  <h2>How to use it, and its limits</h2>
+  <div class="cols">
+    <div>
+      <h4>Reading the arrows</h4>
+      <p>Every box is a quantity that can go up or down. A blue arrow means “more of this gives more of that”, a dashed red arrow “more of this gives less of that”, and a dotted grey arrow means the direction depends on conditions. Signs multiply along a chain: two minus arrows in a row give a plus.</p>
+      <h4>The tools</h4>
+      <p><b>Effects</b> follows a change in the chosen box along every chain of arrows and marks each box it reaches with ↑ (all chains raise it), ↓ (all lower it) or ± (chains disagree, or one passes a grey arrow). <b>Causes</b> runs the other way and finds everything that raises or lowers the box. <b>Trace</b> lists every chain between two boxes and explains each step. <b>Feedback loops</b> lists chains that return to their start: reinforcing loops (R) amplify a change, balancing loops (B) oppose it.</p>
+      <p>Click a result to see its chains, click an arrow for its mechanism and sources, and hide categories to simplify the map: hidden boxes are also left out of every chain. <b>Copy link</b> saves the current view in the address, so you can send exactly what you see.</p>
+    </div>
+    <div>
+      <h4>What it can and cannot tell you</h4>
+      <p>The map shows <b>directions, not sizes</b>. When chains disagree, the signs alone cannot say which wins; that needs measurements or a quantitative model. Longer chains are usually weaker, because each step passes on only part of the change, so the map starts with chains of up to 4 arrows and says which way the most direct chains point. You can allow up to 8. Arrows also run on very different time scales: interception changes within minutes, base saturation over decades, podzolisation over centuries.</p>
+      <p>Most arrows hold for temperate and boreal forests on mineral soils. Where an arrow holds only under certain conditions, its note says so. Some links that are real but weak or disputed are left out to keep the map readable, and it does not cover peat soils, fire or groundwater-affected soils.</p>
+      <p>Use it to think through a question, plan what to measure and explain results. It is not a substitute for a model or for local data.</p>
+      <h4>Adding or changing an arrow</h4>
+      <p>All boxes, arrows and sources are in one file, <code>data/network.js</code>. Add an entry there and it appears on the map, in every tool and in the tables. Suggestions with a source are welcome as an issue or pull request on GitHub.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec" id="references"><div class="wrap">
+  <h2>References</h2>
+  <ol class="refs" id="reflist"></ol>
+  <h4>Cite this map</h4>
+  <p class="cite" id="cite"></p>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p>Created by Waleed Ramzan. It grew out of a project in the Landscape Ecology Project Seminar 2026/27 at the University of Göttingen. Ring layout after Mulder’s chart of nutrient interactions. Code under the MIT licence, content under CC BY 4.0.</p>
+</div></footer>
+
+<script src="data/network.js?v=1"></script>
+<script src="assets/js/app.js?v=1"></script>
+<script>
+/* shows a red notice if a file of the site did not load (for example after an incomplete upload) */
+(function () {
+  var miss = [];
+  if (!getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()) miss.push('assets/css/style.css');
+  if (!window.CEM_NETWORK) miss.push('data/network.js');
+  if (!window.CEM_APP) miss.push('assets/js/app.js');
+  if (!miss.length) return;
+  var d = document.createElement('div');
+  d.setAttribute('role', 'alert');
+  d.style.cssText = 'background:#c0392b;color:#fff;padding:12px 16px;font:16px/1.4 system-ui,sans-serif';
+  d.textContent = 'These files did not load: ' + miss.join(', ') + '. Upload the whole repository again (including the assets and data folders), wait a minute, then reload with Ctrl+Shift+R (Cmd+Shift+R on a Mac).';
+  document.body.insertBefore(d, document.body.firstChild);
+})();
+</script>
+</body>
+</html>
