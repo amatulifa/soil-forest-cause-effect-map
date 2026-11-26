@@ -551,7 +551,7 @@ function refList() {
       (title ? ' · <a href="https://scholar.google.com/scholar?q=' + encodeURIComponent(title) + '" target="_blank" rel="noopener">find it</a>' : '') + '</small></li>';
   }).join('');
   var url = location.origin && location.origin !== 'null' ? location.origin + location.pathname : 'https://github.com/';
-  $('#cite').textContent = 'Ramzan, W. (' + new Date().getFullYear() + '). Soil–Forest Cause–Effect Map: an interactive map of causes and effects in temperate forest soils. ' + url;
+  $('#cite').textContent = 'Ramzan, W., Jameel, A. (' + new Date().getFullYear() + '). Soil–Forest Cause–Effect Map: an interactive map of causes and effects in temperate forest soils. ' + url;
 }
 
 /* links to sections scroll without replacing the view stored in the address */
